@@ -1,0 +1,116 @@
+function Cell.new 0
+push constant 14
+call Memory.alloc 1
+pop pointer 0
+push argument 0
+pop this 11
+push constant 16
+pop this 12
+push constant 16
+pop this 13
+push pointer 0
+return
+function Cell.getType 0
+push argument 0
+pop pointer 0
+push this 11
+return
+function Cell.drawCell 0
+push argument 0
+pop pointer 0
+push this 11
+push constant 1
+eq
+if-goto IF_TRUE10
+goto IF_FALSE10
+label IF_TRUE10
+push pointer 0
+push argument 1
+push argument 2
+call Cell.drawO 3
+pop temp 0
+goto IF_END10
+label IF_FALSE10
+push pointer 0
+push argument 1
+push argument 2
+call Cell.drawX 3
+pop temp 0
+label IF_END10
+push constant 0
+return
+function Cell.drawO 1
+push argument 0
+pop pointer 0
+push this 12
+push constant 2
+call Math.divide 2
+pop local 0
+push constant 0
+not
+call Screen.setColor 1
+pop temp 0
+push argument 1
+push local 0
+add
+push argument 2
+push local 0
+add
+push local 0
+call Screen.drawCircle 3
+pop temp 0
+push constant 0
+call Screen.setColor 1
+pop temp 0
+push argument 1
+push local 0
+add
+push argument 2
+push local 0
+add
+push local 0
+push constant 1
+sub
+call Screen.drawCircle 3
+pop temp 0
+push constant 0
+return
+function Cell.drawX 0
+push argument 0
+pop pointer 0
+push constant 0
+not
+call Screen.setColor 1
+pop temp 0
+push argument 1
+push argument 2
+push this 13
+add
+push argument 1
+push this 12
+add
+push argument 2
+call Screen.drawLine 4
+pop temp 0
+push argument 1
+push argument 2
+push argument 1
+push this 12
+add
+push argument 2
+push this 13
+add
+call Screen.drawLine 4
+pop temp 0
+push constant 0
+return
+function Cell.getHeight 0
+push argument 0
+pop pointer 0
+push this 13
+return
+function Cell.getWidth 0
+push argument 0
+pop pointer 0
+push this 12
+return
