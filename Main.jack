@@ -1,0 +1,14 @@
+//Hodaya Abayev 322758889
+//Esti Maman 207646472
+class Main {
+
+	function void main() {
+		var XO_Game game;
+		do Screen.clearScreen();
+		let game=XO_Game.new();
+		do game.startGame();
+		
+		return;
+	}
+
+}

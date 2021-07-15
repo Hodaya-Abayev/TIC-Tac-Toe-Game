@@ -1,0 +1,172 @@
+class XO_Game {
+	field Board board;
+	field Cell OCell,XCell;
+	field int ir, ic;
+	
+	constructor XO_Game new() {
+		let ir = 1;
+		let ic = 1;
+		let OCell = Cell.new(1);
+		let XCell = Cell.new(2);
+		return this;
+	}
+	
+	
+	method void eraseMessage() {
+		var String s;
+		do Output.moveCursor(ir,ic);
+		let s = "                                                 ";
+		do Output.printString(s);
+		do s.dispose();
+		return;
+	}
+	
+	method void showMessage(String s) {
+		do eraseMessage();
+		do Output.moveCursor(ir,ic);
+		do Output.printString(s);
+		do s.dispose();
+		return;
+	}
+	
+	// reads only valid inputs
+	// returns 1 to 9 for moves
+	method int readInput(String s) {
+		var char c;
+		var int choice;
+		do eraseMessage();		
+		while(true) {
+			do Output.moveCursor(ir,ic);
+			do Output.printString(s);
+			let c = Keyboard.readChar();
+			// 49 to 57
+			if((c>48) & (c<58)) {
+				do s.dispose();
+				return c-48;
+			}
+		}
+		return 0;
+	}
+	
+	
+	// 1-continue, 2-draw and 3-win;
+	method int processBoard() {
+		do board.evaluateBoard();
+		if(board.isWin()) {
+			do board.drawWin();
+			return 3;
+		}
+		if(board.isDraw()) {
+			return 2;
+		}
+		
+		return 1;
+	}
+	
+	// 1-continue, 2-draw, 3-win
+	method int play(int player,Cell c) {
+		var boolean validPlayerInput;
+		var int input;
+		var Array player1Move,player2Move;
+		let validPlayerInput = false;
+		
+		if(player=1) { // player1
+		
+			while(~validPlayerInput)
+                                             { // the player input must be valid
+				let input = readInput("player 1: Enter move 1 to 9:");
+				let player1Move = inputToMove(input);
+				let validPlayerInput = board.isEmpty(player1Move[0],player1Move[1]);
+			}
+			
+			do board.makeMove(player1Move[0],player1Move[1],c);
+			do board.drawMove(player1Move[0],player1Move[1],c);
+			do player1Move.dispose();
+			return processBoard();
+		}
+		else {
+			while(~validPlayerInput)
+                                            { 
+				let input = readInput("player 2: Enter move 1 to 9:");
+				let player2Move = inputToMove(input);
+				let validPlayerInput = board.isEmpty(player2Move[0],player2Move[1]);
+			}
+			
+			do board.makeMove(player2Move[0],player2Move[1],c);
+			do board.drawMove(player2Move[0],player2Move[1],c);
+			do player2Move.dispose();
+			return processBoard();
+		}
+                
+	}
+	
+	method void startGame() {
+		var int currentPlayer,currentCell; //  1 for player1 and 2 for player2
+		var boolean gameOver;
+		var int gameStatus;
+		
+
+			let currentPlayer = 1;
+			let currentCell = XCell;
+			let board = Board.new(200,60);
+			let gameOver = false;
+			while(~gameOver) {
+				let gameStatus = play(currentPlayer,currentCell);
+				
+				if(gameStatus=0) {
+					let gameOver = true;
+				}
+				if(gameStatus=1) {
+					let currentPlayer = getOtherPlayer(currentPlayer);
+					let currentCell = getOtherCell(currentCell);
+				}
+				if(gameStatus=2) {
+					do showMessage("Game over!");
+					let gameOver = true;
+				}
+				if(gameStatus = 3) {
+					if(currentPlayer=1) {
+						do showMessage("Congratulations! Player 1 won the game!");
+					}
+					else {
+						do showMessage("Congratulations! Player 2 won the game!");
+					}
+					let gameOver = true;
+				}
+			}
+	
+		return;
+	}
+	
+	
+	
+	method int getOtherCell(Cell c) {
+		if(c = OCell) {
+			return XCell;
+		}
+		else{
+			return OCell;
+		}
+	}
+	
+	method int getOtherPlayer(int p) {
+		if(p=1) {
+			return 2;
+		}
+		else{
+			return 1;
+		}
+	}
+	
+	
+	
+	method Array inputToMove(int input) {
+		var Array moves;
+		let moves = Array.new(2);
+		let moves[0] = (input-1)/3 ; //row
+		let moves[1] = (input-1)-(3*moves[0]); //column
+		return moves;
+		
+	}
+	
+}
